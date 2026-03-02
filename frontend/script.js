@@ -9,69 +9,77 @@ document.addEventListener("DOMContentLoaded", () => {
     const erroLogin = document.getElementById("erro");
 
     // Se já estiver logado
-    if (localStorage.getItem("logado") === "true") {
+    if (localStorage.getItem("token")) {
         telaLogin.style.display = "none";
         telaPrincipal.style.display = "block";
+        atualizarLista(); // Atualiza lista ao carregar
     }
 
-    // Evento do botão entrar
-    btnLogin.addEventListener("click", () => {
-        const usuarioCorreto = "admin";
-        const senhaCorreta = "1234";
+// ==== REGISTRO ====
+const btnRegistrar = document.getElementById("btnRegistrar");
+btnRegistrar.addEventListener("click", async () => {
+    const email = document.getElementById("registroEmail").value;
+    const password = document.getElementById("registroSenha").value;
 
-        if (
-            usuarioInput.value === usuarioCorreto &&
-            senhaInput.value === senhaCorreta
-        ) {
-            localStorage.setItem("logado", "true");
-            telaLogin.style.display = "none";
-            telaPrincipal.style.display = "block";
+    if (!email || !password) {
+        alert("Preencha email e senha");
+        return;
+    }
+
+    try {
+        const res = await fetch("/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        console.log(data);
+
+        if (res.ok) {
+            alert("Usuário registrado com sucesso! Agora faça login.");
         } else {
-            erroLogin.innerText = "Usuário ou senha incorretos";
+            alert(data.error || "Erro ao registrar usuário");
         }
-    });
-
-    atualizarLista(); // Atualiza lista ao carregar
+    } catch (err) {
+        console.error(err);
+        alert("Erro de conexão com o servidor");
+    }
 });
 
+    // Evento do botão entrar
+    btnLogin.addEventListener("click", async () => {
+        const email = usuarioInput.value;
+        const password = senhaInput.value;
 
-// ===== CLASSE =====
-class Cadastro {
-    constructor() {
-        const salvo = localStorage.getItem("dados");
-        const dadosParseados = salvo ? JSON.parse(salvo) : [];
-        this.dados = Array.isArray(dadosParseados) ? dadosParseados : [];
-        this.idSendoEditado = null;
-    }
+        try {
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
 
-    salvar() {
-        localStorage.setItem("dados", JSON.stringify(this.dados));
-    }
+            const data = await response.json();
 
-    adicionar(valor) {
-        this.dados.push(valor);
-        this.salvar();
-    }
+            if (!response.ok) {
+                erroLogin.innerText = data.error || "Erro desconhecido";
+                return;
+            }
 
-    editar(indice, valor) {
-        this.dados[indice] = valor;
-        this.salvar();
-    }
+            // Guarda token
+            localStorage.setItem("token", data.token);
 
-    remover(indice) {
-        this.dados.splice(indice, 1);
-        this.salvar();
-    }
+            telaLogin.style.display = "none";
+            telaPrincipal.style.display = "block";
 
-    limpar() {
-        this.dados = [];
-        this.salvar();
-    }
-}
-
+            atualizarLista(); // Atualiza lista ao logar
+        } catch (err) {
+            erroLogin.innerText = "Erro ao conectar com servidor";
+            console.error(err);
+        }
+    });
+});
 
 // ===== ELEMENTOS PRINCIPAIS =====
-const cadastro = new Cadastro();
 const entrada = document.getElementById("nome");
 const lista = document.getElementById("lista");
 const mensagem = document.getElementById("mensagem");
@@ -79,97 +87,144 @@ const botaoAdicionar = document.getElementById("adicionar");
 const botaoLimpar = document.getElementById("limpar");
 const inputBusca = document.getElementById("busca");
 
-
 // ===== ATUALIZAR LISTA =====
-function atualizarLista(filtro = "") {
-    lista.innerHTML = "";
+async function atualizarLista(filtro = "") {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-    cadastro.dados.forEach((item, index) => {
-        if (!item.toLowerCase().includes(filtro.toLowerCase())) return;
+    try {
+        const response = await fetch("/clientes", {
+            headers: { "Authorization": "Bearer " + token }
+        });
 
-        const li = document.createElement("li");
+        const clientes = await response.json();
 
-        const span = document.createElement("span");
-        span.innerText = item;
-        span.style.color = "white";
+        lista.innerHTML = "";
 
-        const btnEditar = document.createElement("button");
-        btnEditar.innerHTML = '⚙️';
-        btnEditar.classList.add("btn-editar");
-        btnEditar.onclick = () => {
-            entrada.value = item;
-            cadastro.idSendoEditado = index;
-            entrada.focus();
-        };
+        clientes.forEach((cliente) => {
+            if (!cliente.nome.toLowerCase().includes(filtro.toLowerCase())) return;
 
-        const btnRemover = document.createElement("button");
-        btnRemover.innerText = "x";
-        btnRemover.classList.add("btn-remover");
-        btnRemover.onclick = () => {
-            cadastro.remover(index);
-            atualizarLista(inputBusca.value);
-        };
+            const li = document.createElement("li");
 
-        const divAcoes = document.createElement("div");
-        divAcoes.classList.add("acoes-lista");
-        divAcoes.appendChild(btnEditar);
-        divAcoes.appendChild(btnRemover);
+            const span = document.createElement("span");
+            span.innerText = cliente.nome;
+            span.style.color = "white";
 
-        li.appendChild(span);
-        li.appendChild(divAcoes);
-        lista.appendChild(li);
-    });
+            const btnEditar = document.createElement("button");
+            btnEditar.innerHTML = "⚙️";
+            btnEditar.classList.add("btn-editar");
+            btnEditar.onclick = () => {
+                entrada.value = cliente.nome;
+                entrada.dataset.editId = cliente.id; // marca id para editar
+                entrada.focus();
+            };
+
+            const btnRemover = document.createElement("button");
+            btnRemover.innerText = "x";
+            btnRemover.classList.add("btn-remover");
+            btnRemover.onclick = async () => {
+                await fetch(`/clientes/${cliente.id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                atualizarLista(inputBusca.value);
+            };
+
+            const divAcoes = document.createElement("div");
+            divAcoes.classList.add("acoes-lista");
+            divAcoes.appendChild(btnEditar);
+            divAcoes.appendChild(btnRemover);
+
+            li.appendChild(span);
+            li.appendChild(divAcoes);
+            lista.appendChild(li);
+        });
+    } catch (err) {
+        console.error("Erro ao atualizar lista:", err);
+    }
 }
 
-
-// ===== EVENTOS =====
-botaoAdicionar.addEventListener("click", function (e) {
+// ===== ADICIONAR / EDITAR =====
+botaoAdicionar.addEventListener("click", async (e) => {
     e.preventDefault();
-    const valor = entrada.value.trim();
+    const nome = entrada.value.trim();
+    const token = localStorage.getItem("token");
 
-    if (!valor) {
+    if (!nome) {
         mensagem.innerText = "Digite algo";
         mensagem.className = "erro";
         return;
     }
 
-    if (cadastro.idSendoEditado !== null) {
-        cadastro.editar(cadastro.idSendoEditado, valor);
-        cadastro.idSendoEditado = null;
-        mensagem.innerText = "Editado!";
-        mensagem.className = "sucesso";
-    } else {
-        if (cadastro.dados.includes(valor)) {
-            mensagem.innerText = "Nome já existe";
-            mensagem.className = "erro";
-            return;
+    const editId = entrada.dataset.editId;
+
+    try {
+        if (editId) {
+            // Atualizar cliente
+            await fetch(`/clientes/${editId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ nome })
+            });
+            mensagem.innerText = "Editado!";
+            mensagem.className = "sucesso";
+            delete entrada.dataset.editId;
+        } else {
+            // Adicionar cliente
+            await fetch("/clientes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ nome })
+            });
+            mensagem.innerText = "Adicionado";
+            mensagem.className = "sucesso";
         }
-        cadastro.adicionar(valor);
-        mensagem.innerText = "Adicionado";
-        mensagem.className = "sucesso";
+
+        entrada.value = "";
+        atualizarLista(inputBusca.value);
+    } catch (err) {
+        mensagem.innerText = "Erro ao salvar";
+        mensagem.className = "erro";
+        console.error(err);
     }
-
-    entrada.value = "";
-    atualizarLista(inputBusca.value);
 });
 
-botaoLimpar.addEventListener("click", () => {
-    cadastro.limpar();
-    atualizarLista();
-    mensagem.innerText = "Lista limpa";
-    mensagem.className = "sucesso";
+// ===== LIMPAR LISTA =====
+botaoLimpar.addEventListener("click", async () => {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch("/clientes", {
+            method: "GET",
+            headers: { "Authorization": "Bearer " + token }
+        });
+        const clientes = await response.json();
+
+        // Deleta todos clientes
+        for (const cliente of clientes) {
+            await fetch(`/clientes/${cliente.id}`, {
+                method: "DELETE",
+                headers: { "Authorization": "Bearer " + token }
+            });
+        }
+
+        entrada.value = "";
+        atualizarLista();
+        mensagem.innerText = "Lista limpa";
+        mensagem.className = "sucesso";
+    } catch (err) {
+        mensagem.innerText = "Erro ao limpar";
+        mensagem.className = "erro";
+        console.error(err);
+    }
 });
 
+// ===== BUSCA =====
 inputBusca.addEventListener("keyup", () => {
     atualizarLista(inputBusca.value);
-});
-
-
-// ===== SINCRONIZAÇÃO ENTRE ABAS =====
-window.addEventListener('storage', (event) => {
-    if (event.key === 'dados') {
-        const novosDados = JSON.parse(event.newValue);
-        cadastro.dados = novosDados || [];
-        atualizarLista(inputBusca.value);
-    }
 });

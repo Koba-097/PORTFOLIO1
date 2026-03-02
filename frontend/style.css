@@ -1,3 +1,4 @@
+/* ===== BODY ===== */
 body {
     font-family: Montserrat, sans-serif;
     margin: 0;
@@ -7,26 +8,35 @@ body {
 
     /* CONFIGURAÇÃO DA IMAGEM */
     background-image: url('https://i.redd.it/3jeycphup3if1.gif');
-    background-size: cover;      /* Faz a imagem cobrir a tela inteira sem distorcer */
-    background-position: center;  /* Centraliza a imagem na tela */
-    background-attachment: fixed; /* A imagem fica parada enquanto você rola a lista */
-    background-repeat: no-repeat; /* Impede que a imagem fique se repetindo */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
-#telaPrincipal {
-     background: black;
-     padding: 30px;
-     border-radius: 20px;
-     width: 400px;
-     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+/* ===== LOGIN E TELA PRINCIPAL ===== */
+#login, #telaPrincipal {
+    background: black;
+    padding: 30px;
+    border-radius: 20px;
+    width: 400px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
+/* ===== TITULOS ===== */
 h2 {
     color: magenta;
     text-align: center;
     margin-bottom: 20px;
 }
 
+h3 {
+    color: magenta;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* ===== INPUTS ===== */
 input {
     width: 100%;
     padding: 10px;
@@ -36,8 +46,14 @@ input {
     outline: none;
     color: white;
     background: black;
+    transition: border-color 0.3s;
 }
 
+input:hover {
+    border-color: hotpink;
+}
+
+/* ===== BOTÕES ===== */
 .grupo-botoes {
     display: flex;
     gap: 10px;
@@ -55,29 +71,34 @@ input {
     transition: 0.3s;
 }
 
-.grupo-botoes: button:hover {
-    background: black;
+.grupo-botoes button:hover {
+    background: magenta;
+    color: black;
 }
 
 button:disabled {
-     background-color: #888;
-     cursor: not-allowed;
+    background-color: #888;
+    cursor: not-allowed;
 }
 
+/* ===== MENSAGENS ===== */
 #mensagem {
     font-weight: bold;
     margin-bottom: 10px;
 }
 
 .sucesso {
-    color:pink;
+    color: pink;
 }
 
 .erro {
     color: red;
-    border: 1px blue;
+    border: 1px solid blue;
+    padding: 3px;
+    border-radius: 5px;
 }
 
+/* ===== LISTA ===== */
 ul {
     list-style: none;
     padding: 0;
@@ -99,6 +120,7 @@ li:hover {
     background: #222;
 }
 
+/* ===== BOTÕES DA LISTA ===== */
 .btn-remover {
     width: 30px;
     height: 30px;
@@ -110,54 +132,93 @@ li:hover {
 }
 
 .btn-editar {
-    background: none;        /* Remove a cor de fundo */
-    border: none;            /* Remove a borda magenta/preta */
-    padding: 0;              /* Remove o espaço interno que empurra o emoji */
-    margin: 0;               /* Remove margens externas */
-    cursor: pointer;         /* Mantém a mãozinha ao passar o mouse */
-
-    font-size: 22px;         /* Ajuste o tamanho da engrenagem por aqui */
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-size: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    transition: transform 0.3s; /* Para a animação de girar */
+    transition: transform 0.3s;
 }
 
-/* Efeito opcional para ficar profissional */
 .btn-editar:hover {
-    transform: rotate(90deg); /* A engrenagem gira quando você encosta o mouse */
-    opacity: 0.8;             /* Dá um leve efeito de clique */
+    transform: rotate(90deg);
+    opacity: 0.8;
 }
 
 .acoes-lista {
-    display: flex;       /* Alinha os filhos (botões) em linha */
-    flex-direction: row; /* Garante que fiquem lado a lado */
-    gap: 12px;           /* Dá um espaço fixo entre a engrenagem e o X */
-    align-items: center; /* Alinha os dois verticalmente no meio */
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
 }
 
+/* ===== RESPONSIVIDADE ===== */
 @media (max-width: 600px) {
-   body {
-       background-image: url('https://storage.ko-fi.com/cdn/useruploads/display/93080b73-595e-427b-8143-f8f3d66563a2_master-swordx1.gif');
-       background-size: cover;
-       background-position: center;
-       padding: 15px;
-   }
+    body {
+        background-image: url('https://storage.ko-fi.com/cdn/useruploads/display/93080b73-595e-427b-8143-f8f3d66563a2_master-swordx1.gif');
+        background-size: cover;
+        background-position: center;
+        padding: 15px;
+    }
 
-   #telaPrincipal, #login {
-       width: 100%;
-       max-width: 350px;
-       padding: 20px;
-       box-sizing: border-box;
-   }
+    #telaPrincipal, #login {
+        width: 100%;
+        max-width: 350px;
+        padding: 20px;
+        box-sizing: border-box;
+    }
 
-   input, .grupo-botoes button {
-       font-size: 16px;
-       height: 45px;
-   }
+    input, .grupo-botoes button {
+        font-size: 19px;
+        height: 30px;
+    }
 
-   .acoes-lista {
-       gap: 20px;
-   }
+    .acoes-lista {
+        gap: 20px;
+    }
+}
+
+/* ===== INPUT SENHA + OLHO ===== */
+.senha-container {
+    position: relative;
+    width: 100%;
+}
+
+.senha-container input {
+    width: 100%;
+    padding: 10px 40px 10px 10px;
+    border-radius: 60px;
+    border: 2px solid magenta;
+    outline: none;
+    color: white;
+    background: black;
+}
+
+#verSenha {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+#verSenha svg {
+    fill: white;
+    width: 24px;
+    height: 24px;
+}
+
+#verSenha:hover {
+    transform: translateY(-50%) scale(1.2) rotate(20deg);
+    opacity: 0.8;
+}
+
+/* ===== REGISTRO BUTTON ===== */
+#btnRegistrar {
+    margin-top: 10px;
 }
