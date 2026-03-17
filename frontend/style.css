@@ -182,41 +182,61 @@ li:hover {
     }
 }
 
-/* ===== INPUT SENHA + OLHO ===== */
-.senha-container {
-    position: relative;
-    width: 100%;
+/* Container que segura o input e o olho juntos */
+.senha-container{
+display:flex;
+align-items:center;
+gap:10px;
 }
 
+/* Ajuste específico para o input dentro do container */
 .senha-container input {
-    width: 100%;
-    padding: 10px 40px 10px 10px;
+    flex: 1;
+    padding: 12px 50px 12px 15px; /* Aumentei para 50px para dar mais folga ao botão */
     border-radius: 60px;
     border: 2px solid magenta;
     outline: none;
     color: white;
     background: black;
+    box-sizing: border-box;
 }
 
-#verSenha {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    transition: transform 0.3s;
+/* O botão do olho (Definição Única) */
+#verSenha{
+background:none;
+border:none;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
-#verSenha svg {
-    fill: white;
-    width: 24px;
-    height: 24px;
+/* O ícone SVG */
+#verSenha svg{
+width:28px;
+height:28px;
 }
 
-#verSenha:hover {
-    transform: translateY(-50%) scale(1.2) rotate(20deg);
-    opacity: 0.8;
+#olhoAberto{
+opacity:0;
+transform:scale(0.7);
+transition:0.3s;
 }
+
+#olhoFechado{
+opacity:1;
+transition:0.3s;
+}
+
+.olho-ativo #olhoAberto{
+opacity:1;
+transform:scale(1);
+}
+
+.olho-ativo #olhoFechado{
+opacity:0;
+}
+
 
 /* ===== REGISTRO BUTTON ===== */
 #btnRegistrar {

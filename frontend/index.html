@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns="http://www.w3.org/1999/html">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,44 +8,70 @@
 </head>
 <body>
 
-<div id="login">
-    <h2>Logar</h2>
-    <input type="email" id="usuario" placeholder="Email">
-    <input type="password" id="senha" placeholder="Senha">
-    <button id="btnLogin">Entrar</button>
-    <p id="erro"></p>
+    <div id="login">
+        <h2>Logar</h2>
+        <input type="email" id="usuario" placeholder="Email">
+        <input type="password" id="senha" placeholder="Senha">
+        <button id="btnLogin">Entrar</button>
+        <p id="erro"></p>
 
-    <h3>Ou Cadastrar:</h3>
-    <input type="email" id="registroEmail" placeholder="Email">
-    <input type="password" id="registroSenha" placeholder="Senha">
-     <span id="verSenha" class="olho">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-            <path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
-            <circle cx="12" cy="12" r="2.5"/>
-        </svg>
-    </span>
-    <button id="btnRegistrar">Registrar</button>
+        <h3>Ou Cadastrar:</h3>
+        <input type="email" id="registroEmail" placeholder="Email">
+
+        <div class="senha-container">
+
+<input type="password" id="registroSenha" placeholder="Senha">
+
+<button type="button" id="verSenha" onclick="toggleSenha()">
+
+<svg id="iconeOlho" viewBox="0 0 24 24">
+
+<!-- olho fechado -->
+<g id="olhoFechado">
+<path d="M4 12c2 4 6 4 8 4s6 0 8-4"
+stroke="magenta"
+stroke-width="2"
+fill="none"
+stroke-linecap="round"/>
+
+<line x1="8" y1="16" x2="7" y2="19" stroke="magenta" stroke-width="2"/>
+<line x1="12" y1="16" x2="12" y2="19" stroke="magenta" stroke-width="2"/>
+<line x1="16" y1="16" x2="17" y2="19" stroke="magenta" stroke-width="2"/>
+</g>
+
+<g id="olhoAberto">
+
+<!-- olho -->
+<path d="M1.5 12s4-6.5 10.5-6.5S22.5 12 22.5 12s-4 6.5-10.5 6.5S1.5 12 1.5 12z"
+stroke="magenta"
+stroke-width="2"
+fill="none"
+stroke-linecap="round"
+stroke-linejoin="round"/>
+
+<!-- pupila -->
+<circle cx="12" cy="12" r="3" fill="magenta"/>
+
+</g>
+
+</svg>
+
+</button>
+
 </div>
-
-    <div id="telaPrincipal" class="tela" style="display:none;">
+        <button id="btnRegistrar">Registrar</button>
+    </div> <div id="telaPrincipal" class="tela" style="display:none;">
         <h2>Cadastro de Clientes</h2>
-
         <form id="formCadastro">
             <input id="nome" placeholder="Nome">
-
             <div class="grupo-botoes">
                 <button type="submit" id="adicionar">Adicionar</button>
                 <button type="button" id="limpar">Limpar</button>
-
             </div>
         </form>
-
         <input id="busca" placeholder="Buscar" type="text">
-
         <p id="mensagem"></p>
-
         <ul id="lista"></ul>
-    </div>
-<script src="script.js"></script>
+    </div> <script src="script.js"></script>
 </body>
 </html>
