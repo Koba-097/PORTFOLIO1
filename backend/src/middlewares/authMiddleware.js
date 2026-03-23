@@ -1,7 +1,11 @@
 const jwt = require("jsonwebtoken");
 
 // Verifique se o seu .env tem o JWT_SECRET ou use a string "segredo" se estiver sem .env
-const SECRET = process.env.JWT_SECRET || "segredo";
+const SECRET = process.env.JWT_SECRET;
+
+if (!SECRET) {
+    throw new Error("JWT_SECRET não definido no .env");
+}
 
 function authMiddleware(req, res, next) {
     const authHeader = req.headers.authorization;

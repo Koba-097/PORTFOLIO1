@@ -242,3 +242,109 @@ opacity:0;
 #btnRegistrar {
     margin-top: 10px;
 }
+
+/* botao logout no efeito hamburguer */
+/* Container do Menu no canto esquerdo */
+.menu-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+/* Estilo das 3 barrinhas */
+.menu-icon {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.menu-icon span {
+    width: 30px;
+    height: 4px;
+    background-color: magenta; /* Cor seguindo seu padrão */
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+/* O menu suspenso (escondido por padrão) */
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background: black;
+    border: 1px solid #FF00FF;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Quando o menu tiver a classe 'show', ele aparece */
+.menu-dropdown.show {
+    display: block;
+}
+
+#btnLogout {
+    background: black;
+    color: magenta;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.purpurina {
+    position: absolute;
+    background-color: #FF00FF; /* Sua cor magenta */
+    border-radius: 45%;
+    pointer-events: none; /* Pro mouse não "clicar" na purpurina */
+    box-shadow: 0 0 10px #FF00FF, 0 0 20px #FF00FF;
+    animation: cair 1s linear forwards;
+    z-index: 9999;
+}
+
+@keyframes cair {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(50px) scale(0); /* Cai um pouco e some */
+        opacity: 0;
+    }
+}
+
+/* No seu style.css */
+html, body {
+    cursor: none !important; /* O !important garante que nada ganhe dessa regra */
+    min-height: 100%;
+    margin: 0;
+}
+
+/* Se você tiver outras divs grandes, como a 'container' ou 'main',
+   garanta que elas também escondam o cursor */
+* {
+    /* cursor: none; */ /* Opcional: só use se o de cima falhar */
+}
+
+#custom-cursor {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #FF00FF; /* Borda Magenta */
+    border-radius: 50%;
+    position: fixed; /* Fixa na tela */
+    pointer-events: none; /* Pro clique atravessar o círculo */
+    z-index: 10000;
+    transform: translate(-50%, -50%); /* Centraliza exatamente no bico do mouse */
+    background-color: rgba(255, 0, 255, 0.1); /* Meio transparente no centro */
+    box-shadow: 0 0 15px #FF00FF, inset 0 0 10px #FF00FF; /* Brilho fora e dentro */
+    transition: transform 0.1s ease-out; /* Dá um leve "atraso" charmoso ao seguir */
+}
+
+/* Garante que o mouse apareça em inputs ou botões se você quiser */
+a, button, input {
+    cursor: none;
+}

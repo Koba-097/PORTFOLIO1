@@ -128,6 +128,30 @@ async function atualizarLista(filtro = "") {
     } catch (err) { console.error(err); }
 }
 
+// frontend/script.js
+//BOTAO LOGOUT
+// Lógica para o botão de Sair funcionar
+document.addEventListener('DOMContentLoaded', () => {
+    const btnSair = document.getElementById('btnLogout');
+
+    if (btnSair) {
+        btnSair.onclick = function() {
+            // 1. Remove o token (limpa o "crachá")
+            localStorage.removeItem('token');
+
+            // 2. Esconde a tela de clientes e mostra a de login novamente
+            document.getElementById('telaPrincipal').style.display = 'none';
+            document.getElementById('login').style.display = 'block';
+
+            // 3. Opcional: Limpa as mensagens de erro ou sucesso
+            document.getElementById('mensagem').innerText = "";
+            document.getElementById('erro').innerText = "";
+
+            console.log("Logout realizado com sucesso!");
+        };
+    }
+});
+
 // ===== ADICIONAR / EDITAR =====
 botaoAdicionar.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -154,6 +178,40 @@ botaoAdicionar.addEventListener("click", async (e) => {
     } catch (err) { console.error(err); }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const menuIcon = document.getElementById('menuIcon');
+    const menuDropdown = document.getElementById('menuDropdown');
+    const btnSair = document.getElementById('btnLogout');
+
+    // 1. Lógica para abrir/fechar o menu ao clicar nas barrinhas
+    if (menuIcon) {
+        menuIcon.addEventListener('click', () => {
+            menuDropdown.classList.toggle('show');
+        });
+    }
+
+    // 2. Lógica do Logout (Sair)
+    if (btnSair) {
+        btnSair.onclick = function() {
+            localStorage.removeItem('token');
+            // Esconde o sistema e volta pro login
+            document.getElementById('telaPrincipal').style.display = 'none';
+            document.getElementById('login').style.display = 'block';
+            // Fecha o menu para a próxima vez
+            menuDropdown.classList.remove('show');
+        };
+    }
+
+    // Fecha o menu se clicar fora dele
+    window.onclick = function(event) {
+        if (!event.target.matches('.menu-icon') && !event.target.parentElement.matches('.menu-icon')) {
+            if (menuDropdown.classList.contains('show')) {
+                menuDropdown.classList.remove('show');
+            }
+        }
+    }
+});
+
 // ===== LIMPAR LISTA =====
 botaoLimpar.addEventListener("click", async () => {
     const token = localStorage.getItem("token");
@@ -169,6 +227,58 @@ botaoLimpar.addEventListener("click", async () => {
 
 inputBusca.addEventListener("keyup", () => atualizarLista(inputBusca.value));
 
+const cursor = document.getElementById('custom-cursor');
+
+document.addEventListener('mousemove', (e) => {
+    // 1. MOVIMENTAÇÃO DO CÍRCULO (CURSOR CUSTOM)
+    // Usamos pageX/Y para ele não travar no scroll
+    if (cursor) {
+        window.requestAnimationFrame(() => {
+            cursor.style.left = e.pageX + 'px';
+            cursor.style.top = e.pageY + 'px';
+        });
+    }
+
+    // 2. CRIAÇÃO DA PURPURINA
+    const purpurina = document.createElement('div');
+    purpurina.className = 'purpurina';
+
+    purpurina.style.left = e.pageX + 'px';
+    purpurina.style.top = e.pageY + 'px';
+
+    const tamanho = Math.random() * 8 + 2 + 'px';
+    purpurina.style.width = tamanho;
+    purpurina.style.height = tamanho;
+
+    document.body.appendChild(purpurina);
+
+    // Remove a partícula para não pesar
+    setTimeout(() => {
+        purpurina.remove();
+    }, 1000);
+});
+
+// 3. EFEITOS DE CLIQUE (MANTIDOS)
+document.addEventListener('mousedown', () => {
+    if (cursor) cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
+});
+
+document.addEventListener('mouseup', () => {
+    if (cursor) cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+});
+
+// ===== SEU OLHO DE SENHA ORIGINAL (MANTIDO) =====
+function toggleSenha(){
+    const senha = document.getElementById("registroSenha");
+    const botao = document.getElementById("verSenha");
+    if(senha && senha.type === "password"){
+        senha.type = "text";
+        botao.classList.add("olho-ativo");
+    } else if (senha) {
+        senha.type = "password";
+        botao.classList.remove("olho-ativo");
+    }
+}
 // ===== SEU OLHO DE SENHA ORIGINAL (MANTIDO) =====
 function toggleSenha(){
     const senha = document.getElementById("registroSenha");
