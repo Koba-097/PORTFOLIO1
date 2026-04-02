@@ -10,7 +10,7 @@ async function connectDatabase() {
         driver: sqlite3.Database
     });
 
-    // 1. Criação das tabelas (se não existirem)
+    // 1. Criação das tabelas (se não existirem//
     await db.exec(`
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,8 +29,8 @@ async function connectDatabase() {
         );
     `);
 
-    // 2. Garantir que a coluna 'googleId' exista na tabela 'users'
-    // (Caso a tabela tenha sido criada antes de você adicionar o campo no código)
+    // 2. Garantir que a coluna 'googleId' exista na tabela 'users'//
+    // (Caso a tabela tenha sido criada antes de você adicionar o campo no código)//
     try {
         await db.exec(`ALTER TABLE users ADD COLUMN googleId TEXT UNIQUE`);
         console.log("Coluna googleId adicionada com sucesso na tabela users.");
@@ -42,7 +42,7 @@ async function connectDatabase() {
         }
     }
 
-    // 3. Garantir que a coluna 'email' exista na tabela 'clientes'
+    // 3. Garantir que a coluna 'email' exista na tabela 'clientes'//
     try {
         await db.exec(`ALTER TABLE clientes ADD COLUMN email TEXT`);
         console.log("Coluna email adicionada na tabela clientes.");

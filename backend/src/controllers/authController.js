@@ -32,6 +32,11 @@ exports.login = async (req, res) => {
         return res.status(400).json({ error: "Usuário não encontrado" });
     }
 
+// 🔥 CORREÇÃO AQUI
+    if (!user.password) {
+        return res.status(400).json({ error: "Use login com Google" });
+    }
+
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
         return res.status(400).json({ error: "Senha incorreta" });
